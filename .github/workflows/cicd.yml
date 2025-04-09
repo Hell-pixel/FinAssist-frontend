@@ -13,8 +13,6 @@ on:
         type: choice
         options:
           - all
-          - registry
-          - server
           - redeploy
 
 jobs:
@@ -40,7 +38,7 @@ jobs:
         run: echo "No tests available yet"
 
   push-to-registry:
-    if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.deploy_target == 'all' || github.event.inputs.deploy_target == 'registry') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'all' }}
     needs: build-and-test
     runs-on: ubuntu-latest
     name: Push Docker image to registry
@@ -59,7 +57,7 @@ jobs:
           tags: ${{ vars.REGISTRY }}/${{ vars.IMAGE_NAME }}:${{ vars.DEV_VERSION }}
 
   deploy-to-server:
-    if: ${{ github.event_name == 'workflow_dispatch' && (github.event.inputs.deploy_target == 'all' || github.event.inputs.deploy_target == 'server') }}
+    if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.deploy_target == 'all' }}
     needs: push-to-registry
     runs-on: ubuntu-latest
     name: Deploy image on server
