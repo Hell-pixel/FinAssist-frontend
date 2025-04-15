@@ -1,4 +1,4 @@
-name: CI/CD Frontend
+name: Build & Tests
 
 on:
   push:
