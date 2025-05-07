@@ -1,31 +1,39 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import './App.css';
+import { ConfigProvider, theme } from 'antd';
+import { RouterProvider } from 'react-router-dom';
+import { routes } from './routes';
+import { AppProvider } from '@/contexts/appContext';
+import { useAppContext } from '@/contexts/appContext';
+import { AuthProvider } from './contexts/authContext';
+import ruRU from 'antd/locale/ru_RU';
+import 'dayjs/locale/ru';
+import dayjs from 'dayjs';
 
-function App() {
-  const [count, setCount] = useState(0);
+const App = () => {
+  return (
+    <AuthProvider>
+      <AppProvider>
+        <Main />
+      </AppProvider>
+    </AuthProvider>
+  );
+};
+
+const Main = () => {
+  const { isDark } = useAppContext();
+  const { defaultAlgorithm, darkAlgorithm } = theme;
+
+  dayjs.locale('ru');
 
   return (
-    <>
-      <div>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React Test</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <ConfigProvider
+      theme={{
+        algorithm: isDark ? darkAlgorithm : defaultAlgorithm,
+      }}
+      locale={ruRU}
+    >
+      <RouterProvider router={routes} />
+    </ConfigProvider>
   );
-}
+};
 
 export default App;
